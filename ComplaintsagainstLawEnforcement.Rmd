@@ -1,0 +1,68 @@
+---
+title: "Data on Complaints Against Law Enforcement"
+output: html_document
+date: "2022-10-12"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      fig.align = "center")
+pacman::p_load(tidyverse)
+pacman::p_load(skimr)
+pcd <-read.csv("policecomplaintsdata.csv")
+
+
+```
+
+
+One other possible correlation we'll be looking into is the relatinship between the race of the complainant and the race of the police officer.
+
+
+
+```{r rolebyrade}
+
+
+ggplot(pcd, mapping = aes(x =mos_ethnicity, fill = "red" ))+
+
+geom_bar(mapping = aes(y = ..prop.., group = 1),color = "black", fill = "red")+
+
+scale_y_continuous(labels = scales::percent_format(accuracy = 1))+
+
+theme_light()+
+  
+xlab("Race of Police with Abuse Allegations")+
+
+ylab("Proportion by Race")
+```
+
+As this graph depicts, the vast majority of complaints are made against white police officers.
+```{r raceofcomplainants}
+ggplot(pcd, mapping = aes(x =complainant_ethnicity ))+
+
+geom_bar(mapping = aes(y = ..prop.., group = 1),color = "black", fill = "blue")+
+
+scale_y_continuous(labels = scales::percent_format(accuracy = 1))+
+
+theme_light()+
+  scale_x_discrete(guide = guide_axis(n.dodge = 2))+
+  
+xlab("Race of those who have filed Complaints")+
+
+ylab("Proportion by Race")
+
+```
+As you can see from this graph, over 50% of those who file complaints against police identify as black, with about 20% identifying as Hispanic. The relationship between physical characteristics and police conduct will be further explored in the full paper.
+
+```{r age_year}
+pcd |>
+  group_by(complainant_age_incident, fado_type) |>
+  filter(complainant_age_incident > 0) |>
+  ggplot(mapping = aes(x = fado_type, y = complainant_age_incident, fill = 'red')) +
+  geom_boxplot() +
+  theme_light() +
+  theme(legend.position = 'none') +
+  labs(x = "Type of Complaint", y = "Age of Complaint Filer")
+  
+  
+```
+
